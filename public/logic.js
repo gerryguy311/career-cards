@@ -167,7 +167,8 @@ export function plan(answers) {
   const styleColor = answers.style || 'w';
   const phases = [];
 
-  if (answers.stage === 'mid') {
+  if (answers.stage === 'mid' || answers.stage === 'senior') {
+    const senior = answers.stage === 'senior';
     const start = find(ROLES, answers.start) || ROLES[0];
     const current = find(ROLES, answers.current) || ROLES[0];
     const p1 = normalize(start.colors || styleColor);
@@ -175,8 +176,8 @@ export function plan(answers) {
     const p2 = grow(p1, union(current.colors || styleColor, primary), target.colors, weights);
     const p3 = grow(p2, union(target.colors, primary), target.colors, weights);
     phases.push({ label: 'Where I started', role: start.id === 'none' ? 'Before cyber' : start.label, colors: p1 });
-    phases.push({ label: 'Where I am', role: current.label, colors: p2 });
-    phases.push({ label: 'Where I’m headed', role: target.label, colors: p3 });
+    phases.push({ label: senior ? 'What I’m known for' : 'Where I am', role: current.label, colors: p2 });
+    phases.push({ label: senior ? 'The legacy I’m building' : 'Where I’m headed', role: target.label, colors: p3 });
   } else {
     const current = find(ROLES, answers.current) || ROLES[0];
     const p1 = normalize((current.colors || styleColor)[0]);

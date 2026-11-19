@@ -12,7 +12,7 @@ assert.equal(starter[0].colors, 'b');
 assert.equal(starter[0].role, 'Exploring cyber');
 
 // Every combination must give three non-empty, growing identities.
-for (const stage of ['starting', 'mid']) {
+for (const stage of ['starting', 'mid', 'senior']) {
   for (const r of ROLES) {
     for (const t of TARGETS) {
       for (const s of STYLES) {
@@ -42,3 +42,9 @@ assert.ok(ROLES.some((r) => r.id === 'director') && ROLES.some((r) => r.id === '
 assert.ok(TARGETS.some((r) => r.id === 'director'));
 assert.ok(fallbackReason({ ...gerald[0], card: { name: 'Thalia' } }).includes('Thalia'));
 console.log('Sorting and fallback tests passed.');
+
+const vet = plan({ stage: 'senior', start: 'grc', current: 'director', target: 'ciso', style: 'w', notes: '' });
+assert.equal(vet[1].label, 'What I’m known for');
+assert.equal(vet[2].label, 'The legacy I’m building');
+assert.equal(vet[0].colors, 'w');
+console.log('Senior stage tests passed.');

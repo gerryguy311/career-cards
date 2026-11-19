@@ -20,7 +20,7 @@ fill($('#style'), sortByLabel(STYLES));
 $('#target').value = 'ciso';
 
 function syncStage() {
-  const mid = $('#stage').value === 'mid';
+  const mid = $('#stage').value !== 'starting';
   document.querySelectorAll('.mid-only').forEach((el) => { el.hidden = !mid; });
   if (mid && $('#current').value === 'none') $('#current').value = 'soc';
 }

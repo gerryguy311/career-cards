@@ -155,7 +155,7 @@ export async function explain(request, env) {
   if (!phases.length) return json({ error: 'No phases' }, 400);
 
   const input = {
-    careerStage: body.stage === 'mid' ? 'a few years into a cyber career' : 'just starting or switching into cyber',
+    careerStage: { mid: 'a few years into a cyber career', senior: 'a senior practitioner with ten or more years in cyber' }[body.stage] || 'just starting or switching into cyber',
     notes: clip(body.notes, 500),
     cards: phases.map((p) => ({
       stage: clip(p.label, 40),
