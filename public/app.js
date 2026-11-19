@@ -61,6 +61,7 @@ function render() {
         : '<div class="nocard">No card found</div>'}
       <p class="role">${escapeHtml(p.role)}</p>
       <p class="caption">${escapeHtml(p.caption)}</p>
+      <p class="why"><b>Why these colors:</b> ${escapeHtml(p.why || '')}</p>
       <p class="reason${p.reason ? '' : ' loading'}">${escapeHtml(p.reason || 'Reading the cards…')}</p>
       <button type="button" class="redraw" data-i="${i}">Redraw</button>
     </div>

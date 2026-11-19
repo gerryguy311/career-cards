@@ -119,3 +119,11 @@ footer .legal { max-width: 760px; margin: 8px auto 0; }
 
 .synopsis { font-size: 21px; font-style: italic; line-height: 1.45; color: #F3E6C8; margin: 0 0 24px; max-width: 860px; }
 .synopsis.loading { color: var(--muted); }
+
+.phase .why { font-size: 16px; line-height: 1.4; color: #C9B48A; margin: 0 0 10px; text-align: left; }
+.phase .why b { color: var(--gold); font-family: 'Cinzel', Georgia, serif; font-size: 13px; letter-spacing: 1px; }
+.how { margin: 20px auto 0; max-width: 860px; background: rgba(18, 12, 9, 0.55); border: 1px solid #5A4326; border-radius: 8px; padding: 14px 20px; }
+.how summary { cursor: pointer; font-family: 'Cinzel', Georgia, serif; font-weight: 700; color: var(--gold); letter-spacing: 1px; }
+.how ol { margin: 12px 0 4px; padding-left: 22px; }
+.how li { margin-bottom: 8px; font-size: 18px; }
+.how b { color: var(--gold-soft); }

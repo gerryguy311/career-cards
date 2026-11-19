@@ -19,6 +19,7 @@ for (const stage of ['starting', 'mid', 'senior']) {
         const ps = plan({ stage, start: r.id, current: r.id, target: t.id, style: s.id, notes: '' });
         assert.equal(ps.length, 3);
         ps.forEach((p) => {
+          assert.ok(p.why && !p.why.includes('undefined') && !p.why.includes(' adds .'), `bad why: ${p.why}`);
           assert.ok(p.colors.length >= 1 && p.colors.length <= 5, `bad identity ${p.colors}`);
           assert.equal(p.colors, normalize(p.colors));
           assert.ok(p.guild && p.guild !== 'Colorless');
@@ -53,3 +54,6 @@ import { fallbackSynopsis } from '../public/logic.js';
 const syn = fallbackSynopsis(gerald.map((p, i) => ({ ...p, card: { name: ['Thalia', 'Aurelia', 'Kenrith'][i] } })), 'Gerald');
 assert.ok(syn.startsWith('Gerald began as GRC analyst or auditor in Mono-White') && syn.includes('Kenrith'));
 console.log('Synopsis fallback test passed:', syn);
+
+console.log('Why lines:', gerald.map((p) => p.why));
+assert.ok(ROLES.some((r) => r.id === 'dba'));

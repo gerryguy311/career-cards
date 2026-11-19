@@ -16,6 +16,7 @@ export const ROLES = [
   { id: 'none', label: 'Not in cyber yet', colors: '' },
   { id: 'helpdesk', label: 'IT help desk or support', colors: 'g' },
   { id: 'sysadmin', label: 'Sysadmin or network engineer', colors: 'g' },
+  { id: 'dba', label: 'Database administrator (DBA)', colors: 'gu' },
   { id: 'cloud', label: 'Cloud or DevOps engineer', colors: 'g' },
   { id: 'developer', label: 'Software developer', colors: 'u' },
   { id: 'soc', label: 'SOC analyst', colors: 'r' },
@@ -146,6 +147,13 @@ function grow(prev, next, preferred, weights) {
 
 const find = (list, id) => list.find((x) => x.id === id);
 
+const listColors = (id) => {
+  const names = normalize(id).split('').map((c) => `${COLORS[c].name} (${COLORS[c].word})`);
+  if (names.length <= 1) return names.join('');
+  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+};
+const added = (from, to) => normalize(to).split('').filter((c) => !normalize(from).includes(c)).join('');
+
 // Alphabetical by label, with any pinned ids (like "Not in cyber yet") kept first.
 export function sortByLabel(list, pinned = []) {
   const first = pinned.map((id) => list.find((x) => x.id === id)).filter(Boolean);
@@ -175,9 +183,33 @@ export function plan(answers) {
     const primary = (start.colors || styleColor)[0];
     const p2 = grow(p1, union(current.colors || styleColor, primary), target.colors, weights);
     const p3 = grow(p2, union(target.colors, primary), target.colors, weights);
-    phases.push({ label: 'Where I started', role: start.id === 'none' ? 'Before cyber' : start.label, colors: p1 });
-    phases.push({ label: senior ? 'What I’m known for' : 'Where I am', role: current.label, colors: p2 });
-    phases.push({ label: senior ? 'The legacy I’m building' : 'Where I’m headed', role: target.label, colors: p3 });
+    const styleLabel = (find(STYLES, styleColor) || STYLES[0]).label.toLowerCase();
+    phases.push({
+      label: 'Where I started',
+      role: start.id === 'none' ? 'Before cyber' : start.label,
+      colors: p1,
+      why: start.colors
+        ? `${start.label} is a ${listColors(p1)} role.`
+        : `You’re the one who ${styleLabel}, which is ${listColors(p1)}.`,
+    });
+    const new2 = added(p1, p2);
+    phases.push({
+      label: senior ? 'What I’m known for' : 'Where I am',
+      role: current.label,
+      colors: p2,
+      why: new2
+        ? `${current.label} adds ${listColors(new2)}. Your first color, ${COLORS[primary].name}, stays with you as your commander.`
+        : `${current.label} keeps every color in play, with ${COLORS[primary].name} as your commander.`,
+    });
+    const new3 = added(p2, p3);
+    phases.push({
+      label: senior ? 'The legacy I’m building' : 'Where I’m headed',
+      role: target.label,
+      colors: p3,
+      why: new3
+        ? `Getting to ${target.label} means adding ${listColors(new3)}, with ${COLORS[primary].name} still leading.`
+        : `${target.label} builds on the colors you already have, with ${COLORS[primary].name} still leading.`,
+    });
   } else {
     const current = find(ROLES, answers.current) || ROLES[0];
     const p1 = normalize((current.colors || styleColor)[0]);
@@ -185,9 +217,32 @@ export function plan(answers) {
     const add = pickAdd(p1, target.colors, weights) || pickAdd(p1, ORDER, weights);
     const p2 = union(p1, add);
     const p3 = grow(p2, union(target.colors, primary), target.colors, weights);
-    phases.push({ label: 'Where I am now', role: current.id === 'none' ? 'Exploring cyber' : current.label, colors: p1 });
-    phases.push({ label: 'My next step', role: `Adding ${COLORS[add].name.toLowerCase()}: ${COLORS[add].word}`, colors: p2 });
-    phases.push({ label: 'Where I’m headed', role: target.label, colors: p3 });
+    const styleLabel = (find(STYLES, styleColor) || STYLES[0]).label.toLowerCase();
+    phases.push({
+      label: 'Where I am now',
+      role: current.id === 'none' ? 'Exploring cyber' : current.label,
+      colors: p1,
+      why: current.colors
+        ? `${current.label} starts you in ${listColors(p1)}.`
+        : `You’re the one who ${styleLabel}, which starts you in ${listColors(p1)}.`,
+    });
+    phases.push({
+      label: 'My next step',
+      role: `Adding ${COLORS[add].name.toLowerCase()}: ${COLORS[add].word}`,
+      colors: p2,
+      why: normalize(target.colors).includes(add)
+        ? `${COLORS[add].name} (${COLORS[add].word}) is the first new color on the way to ${target.label}.`
+        : `${COLORS[add].name} (${COLORS[add].word}) fits how you work and rounds out your starting color.`,
+    });
+    const new3 = added(p2, p3);
+    phases.push({
+      label: 'Where I’m headed',
+      role: target.label,
+      colors: p3,
+      why: new3
+        ? `Getting to ${target.label} means adding ${listColors(new3)}, with ${COLORS[primary].name} still leading.`
+        : `${target.label} builds on the colors you already have, with ${COLORS[primary].name} still leading.`,
+    });
   }
 
   return phases.map((p) => ({
