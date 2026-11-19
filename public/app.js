@@ -1,4 +1,4 @@
-import { ROLES, TARGETS, STYLES, plan, sortByLabel, fallbackReason, fallbackSynopsis, colorWords } from './logic.js';
+import { ROLES, TARGETS, STYLES, plan, sortByLabel, groupByCategory, fallbackReason, fallbackSynopsis, colorWords } from './logic.js';
 
 const $ = (sel) => document.querySelector(sel);
 const form = $('#quiz');
@@ -13,9 +13,17 @@ function fill(select, items, relabel = {}) {
     .join('');
 }
 
-fill($('#start'), sortByLabel(ROLES, ['none']), { none: 'Something outside cyber or IT' });
-fill($('#current'), sortByLabel(ROLES, ['none']));
-fill($('#target'), sortByLabel(TARGETS));
+function fillGrouped(select, items, relabel = {}) {
+  select.innerHTML = groupByCategory(items)
+    .map((g) => `<optgroup label="${g.group}">${g.items
+      .map((x) => `<option value="${x.id}">${relabel[x.id] || x.label}</option>`)
+      .join('')}</optgroup>`)
+    .join('');
+}
+
+fillGrouped($('#start'), ROLES, { none: 'Something outside cyber or IT' });
+fillGrouped($('#current'), ROLES);
+fillGrouped($('#target'), TARGETS);
 fill($('#style'), sortByLabel(STYLES));
 $('#target').value = 'ciso';
 

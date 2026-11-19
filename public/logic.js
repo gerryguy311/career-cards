@@ -13,52 +13,54 @@ export const COLORS = {
 
 // Current or past roles. The first letter of `colors` is the role's primary color.
 export const ROLES = [
-  { id: 'none', label: 'Not in cyber yet', colors: '' },
-  { id: 'helpdesk', label: 'IT help desk or support', colors: 'g' },
-  { id: 'sysadmin', label: 'Sysadmin or network engineer', colors: 'g' },
-  { id: 'dba', label: 'Database administrator (DBA)', colors: 'gu' },
-  { id: 'cloud', label: 'Cloud or DevOps engineer', colors: 'g' },
-  { id: 'developer', label: 'Software developer', colors: 'u' },
-  { id: 'soc', label: 'SOC analyst', colors: 'r' },
-  { id: 'ir', label: 'Incident responder or DFIR', colors: 'r' },
-  { id: 'grc', label: 'GRC analyst or auditor', colors: 'w' },
-  { id: 'privacy', label: 'Privacy or compliance', colors: 'w' },
-  { id: 'awareness', label: 'Security awareness or training', colors: 'wg' },
-  { id: 'cti', label: 'Threat intel analyst', colors: 'u' },
-  { id: 'engineer', label: 'Security engineer', colors: 'u' },
-  { id: 'appsec', label: 'Application security', colors: 'ub' },
-  { id: 'pentest', label: 'Pentester or red teamer', colors: 'b' },
-  { id: 'vuln', label: 'Vulnerability management', colors: 'bg' },
-  { id: 'detection', label: 'Detection engineer', colors: 'ru' },
-  { id: 'hunter', label: 'Threat hunter', colors: 'ub' },
-  { id: 'manager', label: 'Security manager or team lead', colors: 'rw' },
-  { id: 'architect', label: 'Security architect', colors: 'wu' },
-  { id: 'consultant', label: 'Consultant or advisor', colors: 'wu' },
-  { id: 'director', label: 'Director of security', colors: 'wur' },
-  { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg' },
+  { id: 'none', label: 'Not in cyber yet', colors: '', group: 'Getting started' },
+  { id: 'helpdesk', label: 'IT help desk or support', colors: 'g', group: 'IT and infrastructure' },
+  { id: 'sysadmin', label: 'Sysadmin or network engineer', colors: 'g', group: 'IT and infrastructure' },
+  { id: 'dba', label: 'Database administrator (DBA)', colors: 'gu', group: 'IT and infrastructure' },
+  { id: 'ics', label: 'ICS/OT security', colors: 'gw', group: 'Engineering and architecture' },
+  { id: 'cloud', label: 'Cloud or DevOps engineer', colors: 'g', group: 'IT and infrastructure' },
+  { id: 'developer', label: 'Software developer', colors: 'u', group: 'IT and infrastructure' },
+  { id: 'soc', label: 'SOC analyst', colors: 'r', group: 'Defense and operations' },
+  { id: 'ir', label: 'Incident responder or DFIR', colors: 'r', group: 'Defense and operations' },
+  { id: 'grc', label: 'GRC analyst or auditor', colors: 'w', group: 'GRC, privacy and people' },
+  { id: 'privacy', label: 'Privacy or compliance', colors: 'w', group: 'GRC, privacy and people' },
+  { id: 'awareness', label: 'Security awareness or training', colors: 'wg', group: 'GRC, privacy and people' },
+  { id: 'cti', label: 'Threat intel analyst', colors: 'u', group: 'Defense and operations' },
+  { id: 'engineer', label: 'Security engineer', colors: 'u', group: 'Engineering and architecture' },
+  { id: 'appsec', label: 'Application security', colors: 'ub', group: 'Engineering and architecture' },
+  { id: 'pentest', label: 'Pentester or red teamer', colors: 'b', group: 'Offensive security' },
+  { id: 'vuln', label: 'Vulnerability management', colors: 'bg', group: 'Defense and operations' },
+  { id: 'detection', label: 'Detection engineer', colors: 'ru', group: 'Defense and operations' },
+  { id: 'hunter', label: 'Threat hunter', colors: 'ub', group: 'Defense and operations' },
+  { id: 'manager', label: 'Security manager or team lead', colors: 'rw', group: 'Leadership and advisory' },
+  { id: 'architect', label: 'Security architect', colors: 'wu', group: 'Engineering and architecture' },
+  { id: 'consultant', label: 'Consultant or advisor', colors: 'wu', group: 'Leadership and advisory' },
+  { id: 'director', label: 'Director of security', colors: 'wur', group: 'Leadership and advisory' },
+  { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg', group: 'Leadership and advisory' },
 ];
 
 // Dream roles.
 export const TARGETS = [
-  { id: 'grc', label: 'GRC analyst', colors: 'w' },
-  { id: 'soc', label: 'SOC analyst', colors: 'r' },
-  { id: 'pentest', label: 'Pentester', colors: 'b' },
-  { id: 'engineer', label: 'Security engineer', colors: 'u' },
-  { id: 'cloudsec', label: 'Cloud security engineer', colors: 'g' },
-  { id: 'manager', label: 'Security manager or team lead', colors: 'rw' },
-  { id: 'architect', label: 'Security architect', colors: 'wu' },
-  { id: 'grclead', label: 'GRC or risk leader', colors: 'wb' },
-  { id: 'hunter', label: 'Threat hunter', colors: 'ub' },
-  { id: 'detection', label: 'Detection engineer', colors: 'ur' },
-  { id: 'redlead', label: 'Red team lead', colors: 'br' },
-  { id: 'cloudarch', label: 'Cloud security architect', colors: 'gu' },
-  { id: 'dfir', label: 'DFIR lead', colors: 'rg' },
-  { id: 'culture', label: 'Security awareness or culture leader', colors: 'gw' },
-  { id: 'vuln', label: 'Vulnerability or exposure management lead', colors: 'bg' },
-  { id: 'principal', label: 'Principal security engineer', colors: 'ugr' },
-  { id: 'director', label: 'Director of security', colors: 'wur' },
-  { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg' },
-  { id: 'founder', label: 'Founder, consultant or educator', colors: 'wubrg' },
+  { id: 'grc', label: 'GRC analyst', colors: 'w', group: 'GRC, privacy and people' },
+  { id: 'soc', label: 'SOC analyst', colors: 'r', group: 'Defense and operations' },
+  { id: 'pentest', label: 'Pentester', colors: 'b', group: 'Offensive security' },
+  { id: 'engineer', label: 'Security engineer', colors: 'u', group: 'Engineering and architecture' },
+  { id: 'cloudsec', label: 'Cloud security engineer', colors: 'g', group: 'Engineering and architecture' },
+  { id: 'manager', label: 'Security manager or team lead', colors: 'rw', group: 'Leadership and advisory' },
+  { id: 'architect', label: 'Security architect', colors: 'wu', group: 'Engineering and architecture' },
+  { id: 'grclead', label: 'GRC or risk leader', colors: 'wb', group: 'GRC, privacy and people' },
+  { id: 'hunter', label: 'Threat hunter', colors: 'ub', group: 'Defense and operations' },
+  { id: 'detection', label: 'Detection engineer', colors: 'ur', group: 'Defense and operations' },
+  { id: 'redlead', label: 'Red team lead', colors: 'br', group: 'Offensive security' },
+  { id: 'cloudarch', label: 'Cloud security architect', colors: 'gu', group: 'Engineering and architecture' },
+  { id: 'dfir', label: 'DFIR lead', colors: 'rg', group: 'Defense and operations' },
+  { id: 'culture', label: 'Security awareness or culture leader', colors: 'gw', group: 'GRC, privacy and people' },
+  { id: 'vuln', label: 'Vulnerability or exposure management lead', colors: 'bg', group: 'Defense and operations' },
+  { id: 'principal', label: 'Principal security engineer', colors: 'ugr', group: 'Engineering and architecture' },
+  { id: 'icslead', label: 'ICS/OT security lead', colors: 'gwu', group: 'Engineering and architecture' },
+  { id: 'director', label: 'Director of security', colors: 'wur', group: 'Leadership and advisory' },
+  { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg', group: 'Leadership and advisory' },
+  { id: 'founder', label: 'Founder, consultant or educator', colors: 'wubrg', group: 'Leadership and advisory' },
 ];
 
 export const STYLES = [
@@ -74,7 +76,7 @@ const KEYWORDS = {
   u: ['research', 'intel', 'architecture', 'design', 'python', 'code', 'coding', 'script', 'automation', 'automate', 'engineer', 'learn', 'analysis', 'data', 'ai', 'detection'],
   b: ['pentest', 'pen test', 'hack', 'hacking', 'red team', 'exploit', 'offensive', 'ctf', 'bug bounty', 'osint', 'malware', 'reverse', 'social engineering'],
   r: ['incident', 'soc', 'response', 'triage', 'alert', 'forensic', 'dfir', 'on-call', 'on call', 'crisis', 'fire', 'siem', 'blue team'],
-  g: ['cloud', 'aws', 'azure', 'gcp', 'network', 'infrastructure', 'sysadmin', 'linux', 'windows', 'build', 'devops', 'kubernetes', 'homelab', 'home lab', 'help desk'],
+  g: ['cloud', 'aws', 'azure', 'gcp', 'network', 'infrastructure', 'sysadmin', 'linux', 'windows', 'build', 'devops', 'kubernetes', 'homelab', 'home lab', 'help desk', 'ics', 'ot', 'scada', 'plc', 'industrial'],
 };
 
 const GUILDS = {
@@ -153,6 +155,23 @@ const listColors = (id) => {
   return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
 };
 const added = (from, to) => normalize(to).split('').filter((c) => !normalize(from).includes(c)).join('');
+
+export const GROUP_ORDER = [
+  'Getting started',
+  'IT and infrastructure',
+  'Defense and operations',
+  'Offensive security',
+  'Engineering and architecture',
+  'GRC, privacy and people',
+  'Leadership and advisory',
+];
+
+// Groups in GROUP_ORDER, items alphabetical inside each group.
+export function groupByCategory(list) {
+  return GROUP_ORDER
+    .map((group) => ({ group, items: sortByLabel(list.filter((x) => x.group === group)) }))
+    .filter((g) => g.items.length);
+}
 
 // Alphabetical by label, with any pinned ids (like "Not in cyber yet") kept first.
 export function sortByLabel(list, pinned = []) {

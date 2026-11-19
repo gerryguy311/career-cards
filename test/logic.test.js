@@ -57,3 +57,12 @@ console.log('Synopsis fallback test passed:', syn);
 
 console.log('Why lines:', gerald.map((p) => p.why));
 assert.ok(ROLES.some((r) => r.id === 'dba'));
+
+import { groupByCategory } from '../public/logic.js';
+for (const list of [ROLES, TARGETS]) {
+  assert.ok(list.every((x) => x.group), 'every role needs a group');
+  const flat = groupByCategory(list).flatMap((g) => g.items);
+  assert.equal(flat.length, list.length, 'grouping must not drop roles');
+}
+assert.ok(ROLES.some((r) => r.id === 'ics') && TARGETS.some((t) => t.id === 'icslead'));
+console.log('Grouping tests passed:', groupByCategory(ROLES).map((g) => `${g.group} (${g.items.length})`).join(', '));
