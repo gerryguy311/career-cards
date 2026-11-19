@@ -7,5 +7,15 @@
     "directory": "./public",
     "binding": "ASSETS"
   },
+  // Workers AI writes the one-line "why this card" reasons.
+  "ai": { "binding": "AI" },
+  // Caps AI calls per visitor IP: 20 per minute.
+  "ratelimits": [
+    {
+      "name": "EXPLAIN_LIMITER",
+      "namespace_id": "1001",
+      "simple": { "limit": 20, "period": 60 }
+    }
+  ],
   "observability": { "enabled": true }
 }

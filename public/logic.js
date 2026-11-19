@@ -33,6 +33,8 @@ export const ROLES = [
   { id: 'manager', label: 'Security manager or team lead', colors: 'rw' },
   { id: 'architect', label: 'Security architect', colors: 'wu' },
   { id: 'consultant', label: 'Consultant or advisor', colors: 'wu' },
+  { id: 'director', label: 'Director of security', colors: 'wur' },
+  { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg' },
 ];
 
 // Dream roles.
@@ -53,6 +55,7 @@ export const TARGETS = [
   { id: 'culture', label: 'Security awareness or culture leader', colors: 'gw' },
   { id: 'vuln', label: 'Vulnerability or exposure management lead', colors: 'bg' },
   { id: 'principal', label: 'Principal security engineer', colors: 'ugr' },
+  { id: 'director', label: 'Director of security', colors: 'wur' },
   { id: 'ciso', label: 'CISO or security executive', colors: 'wubrg' },
   { id: 'founder', label: 'Founder, consultant or educator', colors: 'wubrg' },
 ];
@@ -142,6 +145,21 @@ function grow(prev, next, preferred, weights) {
 }
 
 const find = (list, id) => list.find((x) => x.id === id);
+
+// Alphabetical by label, with any pinned ids (like "Not in cyber yet") kept first.
+export function sortByLabel(list, pinned = []) {
+  const first = pinned.map((id) => list.find((x) => x.id === id)).filter(Boolean);
+  const rest = list.filter((x) => !pinned.includes(x.id)).sort((a, b) => a.label.localeCompare(b.label));
+  return [...first, ...rest];
+}
+
+// Plain-language reason a card fits a phase, used when AI is unavailable.
+export function fallbackReason(phase) {
+  if (!phase.card) return '';
+  const words = colorWords(phase.colors);
+  const mix = phase.colors.length === 1 ? `pure ${words}` : `the same blend of ${words}`;
+  return `${phase.card.name} is a ${phase.guild} legend: ${mix}, just what this stage of your career calls for.`;
+}
 
 export function plan(answers) {
   const weights = weightsFor(answers);

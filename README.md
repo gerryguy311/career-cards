@@ -8,6 +8,7 @@ Answer a few questions and get your cybersecurity career as three Magic: The Gat
 - `src/worker.js` is a Cloudflare Worker. It serves `public/` and adds two routes:
   - `/api/commanders?id=wr` finds paper-legal legendary creatures with that exact color identity on Scryfall, most popular first, cached for 24 hours.
   - `/api/img?u=...` proxies card images from `cards.scryfall.io` only, so the browser can draw them into the downloadable PNG.
+  - `/api/explain` asks Workers AI for a one-sentence "why this card" line per card. It is capped at 20 calls per minute per visitor IP. If AI is unavailable, the page falls back to a plain rule-written line. The model name is `AI_MODEL` at the top of `src/worker.js`.
 - Scryfall rules followed: a descriptive User-Agent and an Accept header on every API call, caching to stay well under the search rate limit, and full card images so the artist credit stays visible.
 
 ## The color rules

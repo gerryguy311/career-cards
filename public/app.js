@@ -1,4 +1,4 @@
-import { ROLES, TARGETS, STYLES, plan } from './logic.js';
+import { ROLES, TARGETS, STYLES, plan, sortByLabel, fallbackReason, colorWords } from './logic.js';
 
 const $ = (sel) => document.querySelector(sel);
 const form = $('#quiz');
@@ -13,10 +13,10 @@ function fill(select, items, relabel = {}) {
     .join('');
 }
 
-fill($('#start'), ROLES, { none: 'Something outside cyber or IT' });
-fill($('#current'), ROLES);
-fill($('#target'), TARGETS);
-fill($('#style'), STYLES);
+fill($('#start'), sortByLabel(ROLES, ['none']), { none: 'Something outside cyber or IT' });
+fill($('#current'), sortByLabel(ROLES, ['none']));
+fill($('#target'), sortByLabel(TARGETS));
+fill($('#style'), sortByLabel(STYLES));
 $('#target').value = 'ciso';
 
 function syncStage() {
@@ -58,6 +58,7 @@ function render() {
         : '<div class="nocard">No card found</div>'}
       <p class="role">${escapeHtml(p.role)}</p>
       <p class="caption">${escapeHtml(p.caption)}</p>
+      <p class="reason${p.reason ? '' : ' loading'}">${escapeHtml(p.reason || 'Reading the cards…')}</p>
       <button type="button" class="redraw" data-i="${i}">Redraw</button>
     </div>
     ${i < 2 ? '<div class="arrow" aria-hidden="true"></div>' : ''}`).join('');
@@ -70,11 +71,42 @@ function creditsLine() {
   return `${parts.join(' · ')}. Images via Scryfall. © Wizards of the Coast.`;
 }
 
+async function explain(indexes) {
+  const phases = indexes.map((i) => state.phases[i]);
+  let reasons = null;
+  try {
+    const res = await fetch('/api/explain', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        stage: state.stage,
+        notes: state.notes,
+        phases: phases.map((p) => ({
+          label: p.label,
+          role: p.role,
+          guild: p.guild,
+          words: colorWords(p.colors),
+          card: p.card ? { name: p.card.name, type: p.card.type, text: p.card.text } : null,
+        })),
+      }),
+    });
+    if (res.ok) reasons = (await res.json()).reasons;
+  } catch {
+    reasons = null;
+  }
+  phases.forEach((p, k) => {
+    p.reason = (reasons && reasons[k]) || fallbackReason(p);
+  });
+  render();
+}
+
 async function redraw(i) {
   const p = state.phases[i];
   const used = new Set(state.phases.map((x) => x.card && x.card.name).filter(Boolean));
   p.card = pick(await cardsFor(p.colors), used) || p.card;
+  p.reason = '';
   render();
+  explain([i]);
 }
 
 form.addEventListener('submit', async (e) => {
@@ -99,8 +131,9 @@ form.addEventListener('submit', async (e) => {
       if (card) used.add(card.name);
       p.card = card;
     }
-    state = { name: answers.name, phases };
+    state = { name: answers.name, stage: answers.stage, notes: answers.notes, phases };
     render();
+    explain([0, 1, 2]);
     result.hidden = false;
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {
@@ -150,22 +183,28 @@ function roundRect(ctx, x, y, w, h, r) {
 
 function wrap(ctx, text, x, y, maxW, lineH, maxLines = 2) {
   const words = String(text).split(' ');
+  const lines = [];
   let line = '';
-  let lines = 0;
   for (const w of words) {
     const test = line ? `${line} ${w}` : w;
     if (ctx.measureText(test).width > maxW && line) {
-      ctx.fillText(line, x, y);
-      y += lineH;
-      lines += 1;
+      lines.push(line);
       line = w;
-      if (lines >= maxLines) return y;
     } else {
       line = test;
     }
   }
-  if (line && lines < maxLines) ctx.fillText(line, x, y);
-  return y + lineH;
+  if (line) lines.push(line);
+  const shown = lines.slice(0, maxLines);
+  if (lines.length > maxLines) shown[maxLines - 1] = fitLine(ctx, `${shown[maxLines - 1]} ${lines[maxLines]}`, maxW);
+  shown.forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
+  return y + shown.length * lineH;
+}
+
+function fitLine(ctx, text, maxW) {
+  let t = text;
+  while (t.length > 1 && ctx.measureText(`${t}…`).width > maxW) t = t.slice(0, -1);
+  return `${t.trimEnd()}…`;
 }
 
 async function buildImage() {
@@ -200,11 +239,11 @@ async function buildImage() {
   ctx.fillStyle = rule;
   ctx.fillRect(128, 196, 1664, 3);
 
-  const cw = 360;
-  const ch = 502;
+  const cw = 330;
+  const ch = 460;
   const gap = 160;
   const x0 = (W - (cw * 3 + gap * 2)) / 2;
-  const y0 = 236;
+  const y0 = 228;
 
   const imgs = await Promise.all(state.phases.map((p) => (p.card
     ? loadImage(`/api/img?u=${encodeURIComponent(p.card.large || p.card.image)}`)
@@ -230,14 +269,19 @@ async function buildImage() {
 
     ctx.textAlign = 'center';
     ctx.fillStyle = '#E0B354';
-    ctx.font = '700 26px Cinzel';
-    ctx.fillText(p.label.toUpperCase(), x + cw / 2, y0 + ch + 52);
+    ctx.font = '700 24px Cinzel';
+    ctx.fillText(p.label.toUpperCase(), x + cw / 2, y0 + ch + 46);
     ctx.fillStyle = '#F3E6C8';
-    ctx.font = '600 30px "EB Garamond"';
-    const after = wrap(ctx, p.role, x + cw / 2, y0 + ch + 92, cw + 100, 34, 2);
+    ctx.font = '600 28px "EB Garamond"';
+    let after = wrap(ctx, p.role, x + cw / 2, y0 + ch + 82, cw + 150, 30, 2);
     ctx.fillStyle = '#C9B48A';
-    ctx.font = 'italic 400 26px "EB Garamond"';
-    wrap(ctx, p.caption, x + cw / 2, after + 4, cw + 100, 30, 2);
+    ctx.font = 'italic 400 24px "EB Garamond"';
+    after = wrap(ctx, p.caption, x + cw / 2, after, cw + 150, 28, 2);
+    if (p.reason) {
+      ctx.fillStyle = '#EADFC8';
+      ctx.font = '400 21px "EB Garamond"';
+      wrap(ctx, p.reason, x + cw / 2, after + 6, cw + 150, 25, 3);
+    }
     ctx.textAlign = 'left';
 
     if (i < 2) {
@@ -260,14 +304,14 @@ async function buildImage() {
   ctx.fillStyle = '#B8A98A';
   ctx.font = '400 20px "EB Garamond"';
   ctx.textAlign = 'center';
-  ctx.fillText(creditsLine(), W / 2, 1000);
+  ctx.fillText(creditsLine(), W / 2, 1014);
   ctx.textAlign = 'left';
   ctx.font = '700 22px Cinzel';
   ctx.fillStyle = '#E0B354';
-  ctx.fillText('SIMPLY CYBER', 128, 1044);
+  ctx.fillText('SIMPLY CYBER', 128, 1054);
   ctx.textAlign = 'right';
   ctx.fillStyle = '#B8A98A';
-  ctx.fillText('Find your color at simplycyber.io', 1792, 1044);
+  ctx.fillText('Find your color at simplycyber.io', 1792, 1054);
   ctx.textAlign = 'left';
   return canvas;
 }
