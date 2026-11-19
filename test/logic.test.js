@@ -66,3 +66,8 @@ for (const list of [ROLES, TARGETS]) {
 }
 assert.ok(ROLES.some((r) => r.id === 'ics') && TARGETS.some((t) => t.id === 'icslead'));
 console.log('Grouping tests passed:', groupByCategory(ROLES).map((g) => `${g.group} (${g.items.length})`).join(', '));
+
+import { easterEgg } from '../public/logic.js';
+assert.ok(easterEgg('  justin   GOLD '));
+assert.equal(easterEgg('Justin'), null);
+console.log('Easter egg test passed.');

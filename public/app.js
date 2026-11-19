@@ -1,4 +1,4 @@
-import { ROLES, TARGETS, STYLES, plan, sortByLabel, groupByCategory, fallbackReason, fallbackSynopsis, colorWords } from './logic.js';
+import { ROLES, TARGETS, STYLES, plan, sortByLabel, groupByCategory, easterEgg, guildName, colorWords as words, fallbackReason, fallbackSynopsis, colorWords } from './logic.js';
 
 const $ = (sel) => document.querySelector(sel);
 const form = $('#quiz');
@@ -71,7 +71,7 @@ function render() {
       <p class="caption">${escapeHtml(p.caption)}</p>
       <p class="why"><b>Why these colors:</b> ${escapeHtml(p.why || '')}</p>
       <p class="reason${p.reason ? '' : ' loading'}">${escapeHtml(p.reason || 'Reading the cards…')}</p>
-      <button type="button" class="redraw" data-i="${i}">Redraw</button>
+      ${state.egg ? '' : `<button type="button" class="redraw" data-i="${i}">Redraw</button>`}
     </div>
     ${i < 2 ? '<div class="arrow" aria-hidden="true"></div>' : ''}`).join('');
   $('#credits').textContent = creditsLine();
@@ -142,15 +142,31 @@ form.addEventListener('submit', async (e) => {
       notes: $('#notes').value,
     };
     const phases = plan(answers);
-    const used = new Set();
-    for (const p of phases) {
-      const card = pick(await cardsFor(p.colors), used);
-      if (card) used.add(card.name);
-      p.card = card;
+    const egg = easterEgg(answers.name);
+    if (egg) {
+      for (const [i, p] of phases.entries()) {
+        const res = await fetch(`/api/card?name=${encodeURIComponent(egg.cards[i])}`);
+        p.card = res.ok ? (await res.json()).card : null;
+        p.colors = egg.colors;
+        p.guild = guildName(egg.colors);
+        p.caption = `${p.guild}: ${words(egg.colors)}`;
+        p.why = egg.why;
+        if (p.role.startsWith('Adding ')) p.role = 'Adding more green: growth';
+        p.reason = egg.reasons[i];
+      }
+      state = { name: answers.name, stage: answers.stage, notes: answers.notes, phases, egg: true, synopsis: egg.synopsis };
+      render();
+    } else {
+      const used = new Set();
+      for (const p of phases) {
+        const card = pick(await cardsFor(p.colors), used);
+        if (card) used.add(card.name);
+        p.card = card;
+      }
+      state = { name: answers.name, stage: answers.stage, notes: answers.notes, phases };
+      render();
+      explain([0, 1, 2]);
     }
-    state = { name: answers.name, stage: answers.stage, notes: answers.notes, phases };
-    render();
-    explain([0, 1, 2]);
     result.hidden = false;
     result.scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (err) {

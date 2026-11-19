@@ -279,3 +279,23 @@ export function fallbackSynopsis(phases, name) {
   const lead = c.card ? `, with ${c.card.name} leading the way` : '';
   return `${who} began as ${a.role} in ${a.guild}, then leveled up into ${b.guild} (${colorWords(b.colors)}). Next stop: ${c.role}${lead}.`;
 }
+
+// Easter eggs: a name that unlocks a hand-picked set of cards. Keys are lowercase names.
+export const EASTER_EGGS = {
+  'justin gold': {
+    colors: 'g',
+    cards: ['Fastbond', 'Farseek', 'Scute Swarm'],
+    why: 'Justin is green. Justin has always been green.',
+    reasons: [
+      'Fastbond lets you play as many lands as you want, because Justin has never met a foundation he didn’t want to build twice.',
+      'Farseek goes and finds exactly the land you need: always ramping, always looking for the next piece of the plan.',
+      'Every land makes more Scute Swarm, and with enough lands it copies itself. Justin doesn’t grow, he multiplies.',
+    ],
+    synopsis: 'Justin Gold was mono-green before it was cool, ramping with Fastbond and Farseek to build bigger foundations than anyone at the table. The endgame is Scute Swarm, because Justin doesn’t just grow, he multiplies.',
+  },
+};
+
+export function easterEgg(name) {
+  const key = String(name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+  return EASTER_EGGS[key] || null;
+}

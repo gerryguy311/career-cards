@@ -14,6 +14,7 @@ export default {
     const url = new URL(request.url);
     if (url.pathname === '/api/commanders') return commanders(request, url, ctx);
     if (url.pathname === '/api/img') return image(request, url, ctx);
+    if (url.pathname === '/api/card') return namedCard(request, url, ctx);
     if (url.pathname === '/api/explain') return explain(request, env);
     if (url.pathname.startsWith('/api/')) return json({ error: 'Not found' }, 404);
     return env.ASSETS.fetch(request);
@@ -76,6 +77,29 @@ export async function commanders(request, url, ctx) {
   const data = await res.json();
   const cards = (data.data || []).map(trimCard).filter(Boolean).slice(0, MAX_CARDS);
   const out = json({ id, cards }, 200, DAY);
+  ctx.waitUntil(cache.put(key, out.clone()));
+  return out;
+}
+
+// Exact-name lookups are limited to the cards the app's easter eggs use.
+const NAMED_ALLOWLIST = new Set(['fastbond', 'farseek', 'scute swarm']);
+
+export async function namedCard(request, url, ctx) {
+  const name = String(url.searchParams.get('name') || '').trim();
+  if (!NAMED_ALLOWLIST.has(name.toLowerCase())) return json({ error: 'Unknown card' }, 404);
+
+  const cache = caches.default;
+  const key = new Request(`${url.origin}/api/card?name=${encodeURIComponent(name.toLowerCase())}&v=${CACHE_VERSION}`, { method: 'GET' });
+  const hit = await cache.match(key);
+  if (hit) return hit;
+
+  const api = new URL('https://api.scryfall.com/cards/named');
+  api.searchParams.set('exact', name);
+  const res = await fetch(api, { headers: { 'User-Agent': UA, Accept: 'application/json' } });
+  if (!res.ok) return json({ error: 'Card lookup failed', status: res.status }, 502);
+  const card = trimCard(await res.json());
+  if (!card) return json({ error: 'Card has no image' }, 502);
+  const out = json({ card }, 200, DAY);
   ctx.waitUntil(cache.put(key, out.clone()));
   return out;
 }

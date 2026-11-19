@@ -60,3 +60,9 @@ const limited = { ...aiEnv, EXPLAIN_LIMITER: { limit: async () => ({ success: fa
 res = await worker.fetch(new Request('https://x.dev/api/explain', { method: "POST", body: explainBody }), limited, ctx);
 assert.equal(res.status, 429);
 console.log('Explain tests passed.');
+
+res = await worker.fetch(new Request('https://x.dev/api/card?name=Lightning%20Bolt'), env, ctx);
+assert.equal(res.status, 404, 'non-allowlisted names are refused');
+res = await worker.fetch(new Request('https://x.dev/api/card?name=Scute%20Swarm'), env, ctx);
+assert.equal(res.status, 502, 'mock returns a list, not a card, so trimCard has no image');
+console.log('Named card tests passed.');
