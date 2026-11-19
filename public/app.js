@@ -1,4 +1,4 @@
-import { ROLES, TARGETS, STYLES, plan, sortByLabel, fallbackReason, colorWords } from './logic.js';
+import { ROLES, TARGETS, STYLES, plan, sortByLabel, fallbackReason, fallbackSynopsis, colorWords } from './logic.js';
 
 const $ = (sel) => document.querySelector(sel);
 const form = $('#quiz');
@@ -50,6 +50,9 @@ function escapeHtml(s) {
 function render() {
   const title = state.name ? `${state.name}’s career in three cards` : 'My career in three cards';
   $('#result-title').textContent = title;
+  const syn = $('#synopsis');
+  syn.textContent = state.synopsis || 'Writing your story…';
+  syn.classList.toggle('loading', !state.synopsis);
   cardsEl.innerHTML = state.phases.map((p, i) => `
     <div class="phase">
       <p class="label">${escapeHtml(p.label)}</p>
@@ -74,14 +77,17 @@ function creditsLine() {
 async function explain(indexes) {
   const phases = indexes.map((i) => state.phases[i]);
   let reasons = null;
+  let synopsis = null;
   try {
     const res = await fetch('/api/explain', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
+        name: state.name,
         stage: state.stage,
         notes: state.notes,
-        phases: phases.map((p) => ({
+        reasonsFor: indexes,
+        phases: state.phases.map((p) => ({
           label: p.label,
           role: p.role,
           guild: p.guild,
@@ -90,13 +96,14 @@ async function explain(indexes) {
         })),
       }),
     });
-    if (res.ok) reasons = (await res.json()).reasons;
+    if (res.ok) ({ reasons, synopsis } = await res.json());
   } catch {
     reasons = null;
   }
   phases.forEach((p, k) => {
     p.reason = (reasons && reasons[k]) || fallbackReason(p);
   });
+  state.synopsis = synopsis || fallbackSynopsis(state.phases, state.name);
   render();
 }
 
@@ -105,6 +112,7 @@ async function redraw(i) {
   const used = new Set(state.phases.map((x) => x.card && x.card.name).filter(Boolean));
   p.card = pick(await cardsFor(p.colors), used) || p.card;
   p.reason = '';
+  state.synopsis = '';
   render();
   explain([i]);
 }
@@ -239,11 +247,17 @@ async function buildImage() {
   ctx.fillStyle = rule;
   ctx.fillRect(128, 196, 1664, 3);
 
-  const cw = 330;
-  const ch = 460;
-  const gap = 160;
+  if (state.synopsis) {
+    ctx.fillStyle = '#EADFC8';
+    ctx.font = 'italic 400 26px "EB Garamond"';
+    wrap(ctx, state.synopsis, 128, 240, 1664, 32, 2);
+  }
+
+  const cw = 300;
+  const ch = 418;
+  const gap = 190;
   const x0 = (W - (cw * 3 + gap * 2)) / 2;
-  const y0 = 228;
+  const y0 = 304;
 
   const imgs = await Promise.all(state.phases.map((p) => (p.card
     ? loadImage(`/api/img?u=${encodeURIComponent(p.card.large || p.card.image)}`)

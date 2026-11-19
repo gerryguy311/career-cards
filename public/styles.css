@@ -116,3 +116,6 @@ footer .legal { max-width: 760px; margin: 8px auto 0; }
 
 .phase .reason { font-size: 17px; line-height: 1.4; color: #EADFC8; margin: 0 0 12px; padding: 10px 12px; background: rgba(18, 12, 9, 0.55); border-left: 3px solid #B8862A; border-radius: 4px; text-align: left; }
 .phase .reason.loading { color: var(--muted); font-style: italic; }
+
+.synopsis { font-size: 21px; font-style: italic; line-height: 1.45; color: #F3E6C8; margin: 0 0 24px; max-width: 860px; }
+.synopsis.loading { color: var(--muted); }

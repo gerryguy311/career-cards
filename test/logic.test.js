@@ -48,3 +48,8 @@ assert.equal(vet[1].label, 'What I’m known for');
 assert.equal(vet[2].label, 'The legacy I’m building');
 assert.equal(vet[0].colors, 'w');
 console.log('Senior stage tests passed.');
+
+import { fallbackSynopsis } from '../public/logic.js';
+const syn = fallbackSynopsis(gerald.map((p, i) => ({ ...p, card: { name: ['Thalia', 'Aurelia', 'Kenrith'][i] } })), 'Gerald');
+assert.ok(syn.startsWith('Gerald began as GRC analyst or auditor in Mono-White') && syn.includes('Kenrith'));
+console.log('Synopsis fallback test passed:', syn);

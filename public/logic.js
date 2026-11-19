@@ -196,3 +196,12 @@ export function plan(answers) {
     caption: `${guildName(p.colors)}: ${colorWords(p.colors)}`,
   }));
 }
+
+// Two-sentence story of the whole arc, used when AI is unavailable.
+export function fallbackSynopsis(phases, name) {
+  const [a, b, c] = phases;
+  if (!a || !b || !c) return '';
+  const who = name || 'You';
+  const lead = c.card ? `, with ${c.card.name} leading the way` : '';
+  return `${who} began as ${a.role} in ${a.guild}, then leveled up into ${b.guild} (${colorWords(b.colors)}). Next stop: ${c.role}${lead}.`;
+}
