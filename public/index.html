@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Untap, Upkeep, Level Up: Your Cyber Career in Three Magic Cards</title>
+<meta name="description" content="Answer a few questions and get your cybersecurity career as three Magic: The Gathering cards. From Simply Cyber.">
+<meta property="og:title" content="Your cyber career in three Magic cards">
+<meta property="og:description" content="Untap, Upkeep, Level Up: find your color, then find your next one. From Simply Cyber.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400..900&family=Cinzel+Decorative:wght@700;900&family=EB+Garamond:ital,wght@0,400..800;1,400..800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main>
+  <header class="hero">
+    <p class="brand">SIMPLY CYBER</p>
+    <h1>Untap, Upkeep, Level Up</h1>
+    <div class="rule"></div>
+    <p class="lede">Your cyber career in three Magic: The Gathering cards. Answer a few questions, draw your cards, and share where you’re headed.</p>
+  </header>
+
+  <form id="quiz" class="panel" autocomplete="off">
+    <div class="field">
+      <label for="name">Your first name <span class="opt">(optional, goes on your image)</span></label>
+      <input id="name" name="name" type="text" maxlength="24" placeholder="Gerald">
+    </div>
+
+    <div class="field">
+      <label for="stage">Where are you in your career?</label>
+      <select id="stage" name="stage" required>
+        <option value="starting">Just starting out, or switching into cyber</option>
+        <option value="mid">A few years in, or more</option>
+      </select>
+    </div>
+
+    <div class="field mid-only" hidden>
+      <label for="start">Your first role in cyber or IT</label>
+      <select id="start" name="start"></select>
+    </div>
+
+    <div class="field">
+      <label for="current">Your current role</label>
+      <select id="current" name="current"></select>
+    </div>
+
+    <div class="field">
+      <label for="target">Your dream role</label>
+      <select id="target" name="target"></select>
+    </div>
+
+    <div class="field">
+      <label for="style">When there’s a problem, I’m the one who…</label>
+      <select id="style" name="style"></select>
+    </div>
+
+    <div class="field">
+      <label for="notes">Tell us more <span class="opt">(optional)</span></label>
+      <textarea id="notes" name="notes" rows="3" maxlength="500" placeholder="What you’ve done, skills you love, tools you use, what you want to get better at"></textarea>
+    </div>
+
+    <button type="submit" class="btn">Draw my cards</button>
+  </form>
+
+  <section id="result" class="panel result" hidden aria-live="polite">
+    <h2 id="result-title">My career in three cards</h2>
+    <div class="rule"></div>
+    <div id="cards" class="cards"></div>
+    <p id="credits" class="credits"></p>
+    <div class="actions">
+      <button type="button" id="download" class="btn">Download image</button>
+      <button type="button" id="again" class="btn ghost">Start over</button>
+    </div>
+    <p class="hint">Don’t love a card? Tap “Redraw” under it for another legend in the same colors.</p>
+  </section>
+
+  <section class="panel about">
+    <h2>How it works</h2>
+    <div class="rule"></div>
+    <p>Every Magic color is a practitioner style. <b>White</b> brings structure (GRC, policy). <b>Blue</b> brings knowledge (intel, architecture). <b>Black</b> brings ambition (offensive security). <b>Red</b> brings speed (SOC, incident response). <b>Green</b> brings growth (infrastructure, cloud).</p>
+    <p>Your first card is the color you start in. Each step adds a color, and your first color stays with you as your commander. Find your color. Then find your next one.</p>
+    <p>From the talk <i>Untap, Upkeep, Level Up: What Magic: The Gathering Teaches Us About Crushing a Cyber Career</i> by Gerald Auger, PhD.</p>
+  </section>
+</main>
+
+<footer>
+  <p><a href="https://simplycyber.io">simplycyber.io</a></p>
+  <p class="legal">Untap, Upkeep, Level Up is unofficial Fan Content permitted under the Fan Content Policy. Not approved or endorsed by Wizards. Portions of the materials used are property of Wizards of the Coast. ©Wizards of the Coast LLC. Card data and images provided by Scryfall; Simply Cyber is not affiliated with Scryfall.</p>
+</footer>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>

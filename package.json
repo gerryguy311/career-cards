@@ -1,0 +1,15 @@
+{
+  "name": "career-cards",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Untap, Upkeep, Level Up: your cyber career in three Magic: The Gathering cards. A Simply Cyber fan tool.",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node test/logic.test.js && node test/worker.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
