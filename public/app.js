@@ -274,15 +274,15 @@ async function buildImage() {
 
   if (state.synopsis) {
     ctx.fillStyle = '#EADFC8';
-    ctx.font = 'italic 400 26px "EB Garamond"';
-    wrap(ctx, state.synopsis, 128, 240, 1664, 32, 2);
+    ctx.font = 'italic 400 24px "EB Garamond"';
+    wrap(ctx, state.synopsis, 128, 238, 1664, 29, 3);
   }
 
-  const cw = 300;
-  const ch = 418;
+  const cw = 280;
+  const ch = 390;
   const gap = 190;
   const x0 = (W - (cw * 3 + gap * 2)) / 2;
-  const y0 = 304;
+  const y0 = 330;
 
   const imgs = await Promise.all(state.phases.map((p) => (p.card
     ? loadImage(`/api/img?u=${encodeURIComponent(p.card.large || p.card.image)}`)

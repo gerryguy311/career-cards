@@ -18,14 +18,16 @@ export const ROLES = [
   { id: 'sysadmin', label: 'Sysadmin or network engineer', colors: 'g', group: 'IT and infrastructure' },
   { id: 'dba', label: 'Database administrator (DBA)', colors: 'gu', group: 'IT and infrastructure' },
   { id: 'ics', label: 'ICS/OT security', colors: 'gw', group: 'Engineering and architecture' },
-  { id: 'cloud', label: 'Cloud or DevOps engineer', colors: 'g', group: 'IT and infrastructure' },
+  { id: 'cloud', label: 'Cloud engineer', colors: 'g', group: 'IT and infrastructure' },
+  { id: 'devops', label: 'DevOps or platform engineer', colors: 'gu', group: 'IT and infrastructure' },
+  { id: 'cloudsec', label: 'Cloud security engineer', colors: 'gu', group: 'Engineering and architecture' },
   { id: 'developer', label: 'Software developer', colors: 'u', group: 'IT and infrastructure' },
   { id: 'soc', label: 'SOC analyst', colors: 'r', group: 'Defense and operations' },
   { id: 'ir', label: 'Incident responder or DFIR', colors: 'r', group: 'Defense and operations' },
   { id: 'grc', label: 'GRC analyst or auditor', colors: 'w', group: 'GRC, privacy and people' },
   { id: 'privacy', label: 'Privacy or compliance', colors: 'w', group: 'GRC, privacy and people' },
   { id: 'awareness', label: 'Security awareness or training', colors: 'wg', group: 'GRC, privacy and people' },
-  { id: 'cti', label: 'Threat intel analyst', colors: 'u', group: 'Defense and operations' },
+  { id: 'cti', label: 'Cyber threat intelligence (CTI) analyst', colors: 'u', group: 'Defense and operations' },
   { id: 'engineer', label: 'Security engineer', colors: 'u', group: 'Engineering and architecture' },
   { id: 'appsec', label: 'Application security', colors: 'ub', group: 'Engineering and architecture' },
   { id: 'pentest', label: 'Pentester or red teamer', colors: 'b', group: 'Offensive security' },
@@ -46,10 +48,12 @@ export const TARGETS = [
   { id: 'pentest', label: 'Pentester', colors: 'b', group: 'Offensive security' },
   { id: 'engineer', label: 'Security engineer', colors: 'u', group: 'Engineering and architecture' },
   { id: 'cloudsec', label: 'Cloud security engineer', colors: 'g', group: 'Engineering and architecture' },
+  { id: 'cloudeng', label: 'Cloud engineer', colors: 'g', group: 'Engineering and architecture' },
   { id: 'manager', label: 'Security manager or team lead', colors: 'rw', group: 'Leadership and advisory' },
   { id: 'architect', label: 'Security architect', colors: 'wu', group: 'Engineering and architecture' },
   { id: 'grclead', label: 'GRC or risk leader', colors: 'wb', group: 'GRC, privacy and people' },
   { id: 'hunter', label: 'Threat hunter', colors: 'ub', group: 'Defense and operations' },
+  { id: 'ctilead', label: 'Cyber threat intelligence (CTI) lead', colors: 'ub', group: 'Defense and operations' },
   { id: 'detection', label: 'Detection engineer', colors: 'ur', group: 'Defense and operations' },
   { id: 'redlead', label: 'Red team lead', colors: 'br', group: 'Offensive security' },
   { id: 'cloudarch', label: 'Cloud security architect', colors: 'gu', group: 'Engineering and architecture' },
@@ -277,7 +281,9 @@ export function fallbackSynopsis(phases, name) {
   if (!a || !b || !c) return '';
   const who = name || 'You';
   const lead = c.card ? `, with ${c.card.name} leading the way` : '';
-  return `${who} began as ${a.role} in ${a.guild}, then leveled up into ${b.guild} (${colorWords(b.colors)}). Next stop: ${c.role}${lead}.`;
+  const start = a.card ? ` with ${a.card.name}` : '';
+  const mid = b.card ? `, much like ${b.card.name}` : '';
+  return `${who} began as ${a.role} in ${a.guild}${start}, grounded in ${colorWords(a.colors)}. The next chapter blends into ${b.guild}${mid}, adding ${colorWords(b.colors)}. Next stop: ${c.role}${lead}, and every color earned along the way stays in play.`;
 }
 
 // Easter eggs: a name that unlocks a hand-picked set of cards. Keys are lowercase names.
@@ -291,7 +297,7 @@ export const EASTER_EGGS = {
       'Farseek goes and finds exactly the land you need: always ramping, always looking for the next piece of the plan.',
       'Every land makes more Scute Swarm, and with enough lands it copies itself. Justin doesn’t grow, he multiplies.',
     ],
-    synopsis: 'Justin Gold was mono-green before it was cool, ramping with Fastbond and Farseek to build bigger foundations than anyone at the table. The endgame is Scute Swarm, because Justin doesn’t just grow, he multiplies.',
+    synopsis: 'Justin Gold was mono-green before it was cool, starting with Fastbond and laying down more foundations in one turn than most people build in a year. Then came Farseek, always reaching for exactly the right piece of land to set up what comes next. The endgame is Scute Swarm, because Justin doesn’t just grow, he multiplies.',
   },
 };
 

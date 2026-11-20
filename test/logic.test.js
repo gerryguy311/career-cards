@@ -53,6 +53,7 @@ console.log('Senior stage tests passed.');
 import { fallbackSynopsis } from '../public/logic.js';
 const syn = fallbackSynopsis(gerald.map((p, i) => ({ ...p, card: { name: ['Thalia', 'Aurelia', 'Kenrith'][i] } })), 'Gerald');
 assert.ok(syn.startsWith('Gerald began as GRC analyst or auditor in Mono-White') && syn.includes('Kenrith'));
+assert.equal(syn.split('. ').length, 3, 'fallback synopsis should be three sentences');
 console.log('Synopsis fallback test passed:', syn);
 
 console.log('Why lines:', gerald.map((p) => p.why));
@@ -71,3 +72,7 @@ import { easterEgg } from '../public/logic.js';
 assert.ok(easterEgg('  justin   GOLD '));
 assert.equal(easterEgg('Justin'), null);
 console.log('Easter egg test passed.');
+
+assert.ok(ROLES.some((r) => r.label.includes('CTI')) && TARGETS.some((t) => t.id === 'ctilead'));
+assert.ok(ROLES.some((r) => r.id === 'cloudsec') && ROLES.some((r) => r.id === 'devops'));
+console.log('CTI and cloud role tests passed.');
